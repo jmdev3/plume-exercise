@@ -1,44 +1,20 @@
 import { useBalances, useTransactions, useWalletConnection } from "@/hooks";
-import { truncateAddress } from "@/lib";
+import {
+  calculateUsdValue,
+  EXAMPLE_TOKEN_ADDRESSES,
+  formatAmount,
+  formatTimestamp,
+  tokenPrices,
+  truncateAddress,
+} from "@/lib";
 import { ERC20Transfer } from "@/types";
 import { Card, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Image from "next/image";
-import { formatUnits } from "viem";
 import { useDisconnect } from "wagmi";
 import styles from "./wallet-connected.module.css";
 
 const { Text } = Typography;
-
-const EXAMPLE_TOKEN_ADDRESSES: { symbol: string; decimals: number; address: `0x${string}` }[] = [
-  {
-    symbol: "nALPHA",
-    decimals: 6,
-    address: "0x593cCcA4c4bf58b7526a4C164cEEf4003C6388db",
-  },
-  {
-    symbol: "nTBILL",
-    decimals: 6,
-    address: "0xE72Fe64840F4EF80E3Ec73a1c749491b5c938CB9",
-  },
-];
-
-const formatAmount = (value: string, decimals: number) => {
-  return formatUnits(BigInt(value), decimals);
-};
-
-// Format timestamp to readable date
-const formatTimestamp = (timestamp: string) => {
-  const date = new Date(parseInt(timestamp) * 1000);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-};
 
 const columns: ColumnsType<ERC20Transfer> = [
   {
@@ -89,8 +65,11 @@ export const WalletConnected = () => {
   const { address } = useWalletConnection();
   const { disconnect } = useDisconnect();
   const { data: balances, isLoading: balancesLoading } = useBalances(address!, EXAMPLE_TOKEN_ADDRESSES);
-
   const { data: transactions, isLoading: txLoading } = useTransactions(address!, EXAMPLE_TOKEN_ADDRESSES);
+
+  const handleDisconnect = () => {
+    disconnect();
+  };
 
   return (
     <>
@@ -98,7 +77,7 @@ export const WalletConnected = () => {
         <div className={styles.headerContent}>
           <Image src="https://app.nest.credit/images/nest-logo.svg" alt="Wallet" width={60} height={60} />
           <div className={styles.walletAddress}>
-            <span onClick={() => disconnect()}>{truncateAddress(address ?? "")}</span>
+            <span onClick={handleDisconnect}>{truncateAddress(address ?? "")}</span>
           </div>
         </div>
       </div>
@@ -106,12 +85,23 @@ export const WalletConnected = () => {
       <Card style={{ minWidth: "400px" }} loading={balancesLoading}>
         <h3>Your Nest Balance</h3>
         {balances && (
-          <div>
-            PLUME {formatAmount(balances?.native.toString(), 18)}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <TokenBalanceItem
+              logo="https://icons-ckg.pages.dev/stargate-light/networks/plumephoenix.svg"
+              symbol="PLUME"
+              decimals={18}
+              balance={balances?.native.toString()}
+              price={tokenPrices["0x0000000000000000000000000000000000000000"]}
+            />
             {balances?.erc20s.map((balance) => (
-              <div key={balance.token.address}>
-                {balance.token.symbol} {formatAmount(balance.balance, balance.token.decimals)}
-              </div>
+              <TokenBalanceItem
+                key={balance.token.address}
+                logo={balance.token.icon}
+                symbol={balance.token.symbol}
+                decimals={balance.token.decimals}
+                balance={balance.balance}
+                price={tokenPrices[balance.token.address as keyof typeof tokenPrices]}
+              />
             ))}
           </div>
         )}
@@ -132,5 +122,31 @@ export const WalletConnected = () => {
         />
       </Card>
     </>
+  );
+};
+
+const TokenBalanceItem = ({
+  logo,
+  symbol,
+  decimals,
+  balance,
+  price,
+}: {
+  logo: string;
+  symbol: string;
+  decimals: number;
+  balance: string;
+  price: number;
+}) => {
+  return (
+    <div key={symbol}>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Image style={{ borderRadius: 40 }} src={logo} alt={symbol} width={30} height={30} />
+        <Text strong style={{ fontSize: 25, marginLeft: 10 }}>
+          {formatAmount(balance, decimals)}
+        </Text>
+      </div>
+      <Text type="secondary">${calculateUsdValue(balance, decimals, price)}</Text>
+    </div>
   );
 };

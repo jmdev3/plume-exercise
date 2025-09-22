@@ -4,7 +4,7 @@ import { erc20Abi } from "viem";
 
 export function useBalances(
   address: `0x${string}`,
-  tokens: { symbol: string; decimals: number; address: `0x${string}` }[],
+  tokens: { symbol: string; decimals: number; address: `0x${string}`; icon: string }[],
 ) {
   return useQuery({
     queryKey: ["balances", address],
