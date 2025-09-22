@@ -43,3 +43,7 @@ a {
   background-color: var(--ant-color-text) !important;
   color: var(--ant-color-bg-base) !important;
 }
+
+.ant-card {
+  box-shadow: 0 0 4px var(--ant-color-border) !important;
+}

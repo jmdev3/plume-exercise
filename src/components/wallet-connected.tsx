@@ -1,6 +1,8 @@
 import { useBalances, useTransactions, useWalletConnection } from "@/hooks";
 import { truncateAddress } from "@/lib";
-import { Card, List, Typography } from "antd";
+import { ERC20Transfer } from "@/types";
+import { Card, Table, Typography } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import Image from "next/image";
 import { useDisconnect } from "wagmi";
 import styles from "./wallet-connected.module.css";
@@ -27,6 +29,90 @@ export const WalletConnected = () => {
 
   const { data: transactions, isLoading: txLoading, error } = useTransactions(address!, EXAMPLE_TOKEN_ADDRESSES);
 
+  // Format amount with proper decimals
+  const formatAmount = (value: string, decimals: number) => {
+    const num = BigInt(value);
+    const divisor = BigInt(10 ** decimals);
+    const wholePart = num / divisor;
+    const fractionalPart = num % divisor;
+
+    if (fractionalPart === BigInt(0)) {
+      return wholePart.toString();
+    }
+
+    const fractionalStr = fractionalPart.toString().padStart(decimals, "0");
+    const trimmedFractional = fractionalStr.replace(/0+$/, "");
+
+    if (trimmedFractional === "") {
+      return wholePart.toString();
+    }
+
+    // Format to show up to 2 decimal places for display
+    const formatted = `${wholePart}.${trimmedFractional}`;
+    const [integer, decimal] = formatted.split(".");
+    const decimalPart = decimal.substring(0, 2);
+
+    return decimalPart ? `${integer}.${decimalPart}` : integer;
+  };
+
+  // Format timestamp to readable date
+  const formatTimestamp = (timestamp: string) => {
+    const date = new Date(parseInt(timestamp) * 1000);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const columns: ColumnsType<ERC20Transfer> = [
+    {
+      title: "Transaction",
+      dataIndex: "hash",
+      key: "hash",
+      render: (hash: string) => (
+        <Text style={{ textDecoration: "underline", cursor: "pointer" }}>{truncateAddress(hash)}</Text>
+      ),
+    },
+    {
+      title: "From",
+      dataIndex: "from",
+      key: "from",
+      render: (from: string) => (
+        <Text style={{ textDecoration: "underline", cursor: "pointer" }}>{truncateAddress(from)}</Text>
+      ),
+    },
+    {
+      title: "To",
+      dataIndex: "to",
+      key: "to",
+      render: (to: string) => (
+        <Text style={{ textDecoration: "underline", cursor: "pointer" }}>{truncateAddress(to)}</Text>
+      ),
+    },
+    {
+      title: "Token",
+      dataIndex: "tokenSymbol",
+      key: "tokenSymbol",
+      render: (symbol: string) => <Text strong>{symbol}</Text>,
+    },
+    {
+      title: "Amount",
+      dataIndex: "value",
+      key: "amount",
+      render: (value: string, record: ERC20Transfer) => <Text>{formatAmount(value, record.tokenDecimal)}</Text>,
+    },
+    {
+      title: "Date & Time",
+      dataIndex: "timeStamp",
+      key: "timeStamp",
+      render: (timestamp: string) => <Text>{formatTimestamp(timestamp)}</Text>,
+    },
+  ];
+
   return (
     <>
       <div className={styles.header}>
@@ -52,46 +138,19 @@ export const WalletConnected = () => {
         )}
       </Card>
 
-      <Card loading={txLoading} style={{ margin: "20px 0", minWidth: "400px" }}>
-        <h3>Your Nest Transactions</h3>
-        {error ? (
-          <Text type="danger">Error loading transactions: {error.message}</Text>
-        ) : transactions && transactions.length > 0 ? (
-          <List
-            dataSource={transactions}
-            renderItem={(tx) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={
-                    <div>
-                      <Text strong>{tx.tokenSymbol}</Text>
-                      <Text type="secondary" style={{ marginLeft: "8px" }}>
-                        {tx.from === address ? "Sent" : "Received"}
-                      </Text>
-                    </div>
-                  }
-                  description={
-                    <div>
-                      <Text>Amount: {tx.value}</Text>
-                      <br />
-                      <Text type="secondary">
-                        {tx.from === address ? `To: ${truncateAddress(tx.to)}` : `From: ${truncateAddress(tx.from)}`}
-                      </Text>
-                      <br />
-                      <Text type="secondary" style={{ fontSize: "12px" }}>
-                        Hash: {truncateAddress(tx.hash)}
-                      </Text>
-                    </div>
-                  }
-                />
-              </List.Item>
-            )}
-          />
-        ) : (
-          <Text type="secondary">
-            No ERC20 transactions found. Add token addresses to the EXAMPLE_TOKEN_ADDRESSES array to see transactions.
-          </Text>
-        )}
+      <Card loading={txLoading} style={{ margin: "20px 0", minWidth: "800px" }}>
+        <h3>Transaction history</h3>
+        <Table
+          columns={columns}
+          dataSource={transactions}
+          rowKey="hash"
+          pagination={false}
+          className={styles.transactionTable}
+          style={{ marginTop: "16px" }}
+          locale={{
+            emptyText: <Text type="secondary">No transactions found</Text>,
+          }}
+        />
       </Card>
     </>
   );
