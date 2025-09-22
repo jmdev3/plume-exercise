@@ -1,9 +1,15 @@
+"use client";
+
+import { WalletConnected, WalletDisconnected } from "@/components";
+import { useWalletConnection } from "@/hooks";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const { isConnected, mounted } = useWalletConnection();
+
   return (
     <div className={styles.page}>
-      <h1>Plume Exercise</h1>
+      <div>{!mounted || !isConnected ? <WalletDisconnected /> : <WalletConnected />}</div>
     </div>
   );
 }

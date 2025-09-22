@@ -1,2 +1,2 @@
-export * from "./ant-registry";
-export * from "./viem";
+export * from "./utils";
+export * from "./wagmi";

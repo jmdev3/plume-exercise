@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[Plume exercise](https://github.com/plumenetwork/plume-fullstack-developer-exercise?tab=readme-ov-file)
 
 ## Getting Started
 
