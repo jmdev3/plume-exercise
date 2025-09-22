@@ -13,7 +13,7 @@ export const WalletDisconnected = () => {
   return (
     <Card className={styles.walletDisconnected}>
       <Image src="https://app.nest.credit/images/nest-logo.svg" alt="Wallet" width={80} height={80} />
-      <span style={{ marginBottom: 20 }}>Connect your wallet to start using Nest.</span>
+      <span className={styles.description}>Connect your wallet to start using Nest.</span>
       <Button type="primary" onClick={handleConnect}>
         Connect Wallet
       </Button>
