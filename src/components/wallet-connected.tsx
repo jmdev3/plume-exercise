@@ -67,13 +67,13 @@ const columns: ColumnsType<ERC20Transfer> = [
 export const WalletConnected = ({ address: addressProp }: { address?: `0x${string}` }) => {
   const { address } = useWalletConnection();
   const { disconnect } = useDisconnect();
-  const { data: balances, isLoading: balancesLoading } = useBalances(addressProp || address!, EXAMPLE_TOKEN_ADDRESSES);
-  const { data: transactions, isLoading: txLoading } = useTransactions(
-    addressProp || address!,
-    EXAMPLE_TOKEN_ADDRESSES,
-  );
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(addressProp || "");
   const router = useRouter();
+
+  const validAddress = isAddress(addressProp || "") ? addressProp! : address!;
+
+  const { data: balances, isLoading: balancesLoading } = useBalances(validAddress, EXAMPLE_TOKEN_ADDRESSES);
+  const { data: transactions, isLoading: txLoading } = useTransactions(validAddress, EXAMPLE_TOKEN_ADDRESSES);
 
   const handleDisconnect = () => {
     disconnect();
