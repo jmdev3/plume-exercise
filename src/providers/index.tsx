@@ -22,10 +22,10 @@ export function Providers({ children }: { children: ReactNode }) {
       body.style.setProperty("--ant-color-bg-container", "#1f1f1f");
       body.style.setProperty("--ant-color-border", "#424242");
     } else {
-      body.style.setProperty("--ant-color-bg-base", "#ffffff");
+      body.style.setProperty("--ant-color-bg-base", "#f9fafb");
       body.style.setProperty("--ant-color-text", "#000000");
       body.style.setProperty("--ant-color-bg-container", "#ffffff");
-      body.style.setProperty("--ant-color-border", "#d9d9d9");
+      body.style.setProperty("--ant-color-border", "#ffffff");
     }
   }, [isDark]);
 
@@ -43,12 +43,12 @@ export function Providers({ children }: { children: ReactNode }) {
               token: {
                 borderRadius: 12,
                 // Add some custom tokens to ensure variables are generated
-                colorBgBase: isDark ? "#141414" : "#ffffff",
+                colorBgBase: isDark ? "#141414" : "#f9fafb",
                 colorTextBase: isDark ? "#ffffff" : "#000000",
                 colorBgContainer: isDark ? "#1f1f1f" : "#ffffff",
-                colorBorder: isDark ? "#424242" : "#d9d9d9",
+                colorBorder: isDark ? "#424242" : "#ffffff",
               },
-              cssVar: true, // Enable CSS variables
+              cssVar: true,
             }}
           >
             <div

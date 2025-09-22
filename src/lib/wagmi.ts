@@ -1,3 +1,4 @@
+import { createPublicClient } from "viem";
 import { createConfig, http } from "wagmi";
 import { injected } from "wagmi/connectors";
 
@@ -16,4 +17,9 @@ export const config = createConfig({
   transports: {
     [98866]: http(),
   },
+});
+
+export const client = createPublicClient({
+  chain: config.chains[0],
+  transport: http(),
 });
