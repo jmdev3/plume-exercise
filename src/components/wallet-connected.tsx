@@ -1,12 +1,11 @@
-"use client";
-
+import { useWalletConnection } from "@/hooks";
 import { truncateAddress } from "@/lib";
 import Image from "next/image";
-import { useAccount, useDisconnect } from "wagmi";
+import { useDisconnect } from "wagmi";
 import styles from "./wallet-connected.module.css";
 
 export const WalletConnected = () => {
-  const { address } = useAccount();
+  const { address } = useWalletConnection();
   const { disconnect } = useDisconnect();
 
   return (
