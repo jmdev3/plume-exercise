@@ -129,7 +129,7 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         <Table
           columns={columns}
           dataSource={transactions}
-          rowKey="hash"
+          rowKey="id"
           pagination={false}
           className={`${styles.transactionTable} ${styles.tableContainer}`}
           locale={{
