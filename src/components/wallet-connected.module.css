@@ -1,0 +1,27 @@
+.header {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  background-color: var(--ant-color-border);
+  border-radius: 40px;
+  padding: 0 24px;
+}
+
+.walletAddress {
+  cursor: pointer;
+  border: 1px solid var(--ant-color-bg-base);
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+}

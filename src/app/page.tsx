@@ -1,9 +1,18 @@
+"use client";
+
+import { WalletConnected, WalletDisconnected } from "@/components";
+import { useAccount } from "wagmi";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const { isConnected } = useAccount();
+
   return (
     <div className={styles.page}>
-      <h1>Plume Exercise</h1>
+      <div>
+        {!isConnected && <WalletDisconnected />}
+        {isConnected && <WalletConnected />}
+      </div>
     </div>
   );
 }
