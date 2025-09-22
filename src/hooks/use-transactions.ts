@@ -1,6 +1,7 @@
 import { client } from "@/lib";
 import { ERC20Transfer } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { compact } from "lodash";
 import { v4 as uuidv4 } from "uuid";
 
 // not the best elegant solution, but it works
@@ -40,20 +41,24 @@ async function fetchLogsInChunks({
       toBlock: to,
     });
 
-    for (const event of logs) {
-      if (!event.args.from || !event.args.to || event.args.value === undefined) continue;
+    transfers.push(
+      ...compact(
+        logs.map((event) => {
+          if (!event.args.from || !event.args.to || event.args.value === undefined) return null;
 
-      transfers.push({
-        id: `${event.transactionHash}-${uuidv4()}`,
-        blockNumber: event.blockNumber.toString(),
-        hash: event.transactionHash,
-        from: event.args.from,
-        to: event.args.to,
-        value: event.args.value.toString(),
-        tokenSymbol: token.symbol,
-        tokenDecimal: token.decimals,
-      });
-    }
+          return {
+            id: `${event.transactionHash}-${uuidv4()}`,
+            blockNumber: event.blockNumber.toString(),
+            hash: event.transactionHash,
+            from: event.args.from,
+            to: event.args.to,
+            value: event.args.value.toString(),
+            tokenSymbol: token.symbol,
+            tokenDecimal: token.decimals,
+          };
+        }),
+      ),
+    );
 
     from = to + BigInt(1);
   }

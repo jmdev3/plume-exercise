@@ -132,7 +132,9 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
           dataSource={transactions}
           rowKey="id"
           pagination={{
-            pageSize: 10,
+            pageSize: 5,
+            size: "default",
+            showSizeChanger: false,
           }}
           className={`${styles.transactionTable} ${styles.tableContainer}`}
           locale={{
@@ -158,7 +160,7 @@ const TokenBalanceItem = ({
   price: number;
 }) => {
   return (
-    <div key={symbol}>
+    <div key={symbol} className={styles.tokenBalanceItemContainer}>
       <div className={styles.tokenBalanceItem}>
         <Image className={styles.tokenImage} src={logo} alt={symbol} width={30} height={30} />
         <Text strong className={styles.tokenAmount}>
