@@ -129,12 +129,12 @@
 }
 
 .searchInput {
-  width: 400px;
+  width: 400px !important;
 }
 
 @media (max-width: 768px) {
   .searchInput {
-    width: 300px;
+    width: 300px !important;
   }
 }
 
