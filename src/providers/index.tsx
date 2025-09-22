@@ -48,7 +48,7 @@ export function Providers({ children }: { children: ReactNode }) {
                 colorBgContainer: isDark ? "#1f1f1f" : "#ffffff",
                 colorBorder: isDark ? "#424242" : "#d9d9d9",
               },
-              cssVar: true, // Enable CSS variables
+              cssVar: true,
             }}
           >
             <div
