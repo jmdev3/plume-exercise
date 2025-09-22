@@ -17,6 +17,19 @@
   padding: 0 24px;
 }
 
+@media (max-width: 768px) {
+  .headerContent {
+    width: 90%;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerContent {
+    width: 60%;
+  }
+}
+
 .walletAddress {
   cursor: pointer;
   padding: 8px;
@@ -26,6 +39,53 @@
 }
 
 .transactionTable {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.transactionTable :global(.ant-table-container) {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.transactionTable :global(.ant-table-body) {
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .transactionTable {
+    max-height: 400px;
+  }
+
+  .transactionTable :global(.ant-table-container) {
+    max-height: 400px;
+  }
+
+  .transactionTable :global(.ant-table-body) {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .transactionTable {
+    max-height: 300px;
+  }
+
+  .transactionTable :global(.ant-table-container) {
+    max-height: 300px;
+  }
+
+  .transactionTable :global(.ant-table-body) {
+    max-height: 250px;
+  }
+}
+
+.transactionTable :global(.ant-table-thead) {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
 }
 
 .transactionTable :global(.ant-table-thead > tr > th) {
@@ -34,6 +94,7 @@
   font-weight: 600;
   font-size: 14px;
   padding: 12px 16px;
+  word-break: keep-all !important;
 }
 
 .transactionTable :global(.ant-table-thead > tr > th:first-child) {
@@ -48,6 +109,7 @@
   padding: 12px 16px;
   border-bottom: none !important;
   font-size: 14px;
+  word-break: keep-all !important;
 }
 
 .transactionTable :global(.ant-table-tbody > tr:hover > td) {
@@ -64,4 +126,138 @@
 
 .transactionTable :global(.ant-table-tbody > tr:last-child > td) {
   border-bottom: none;
+}
+
+.searchInput {
+  width: 400px !important;
+}
+
+@media (max-width: 768px) {
+  .searchInput {
+    width: 300px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchInput {
+    display: none !important;
+    width: 0;
+  }
+}
+
+.balanceCard {
+  min-width: 400px;
+}
+
+.balanceContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.transactionCard {
+  margin: 20px 0 !important;
+  min-width: 800px;
+}
+
+@media (max-width: 768px) {
+  .balanceCard {
+    min-width: 90vw;
+    margin: 16px auto;
+  }
+
+  .transactionCard {
+    max-width: 400px;
+    word-break: break-word;
+    margin: 16px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .balanceCard {
+    min-width: 95vw;
+    margin: 12px auto;
+  }
+
+  .transactionCard {
+    min-width: 95vw;
+    margin: 12px 0 !important;
+  }
+
+  .balanceContainer {
+    gap: 8px;
+  }
+}
+
+.tableContainer {
+  margin-top: 16px;
+}
+
+.clickableText {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.tokenBalanceItem {
+  display: flex;
+  align-items: center;
+}
+
+.tokenImage {
+  border-radius: 40px;
+}
+
+.tokenAmount {
+  font-size: 25px !important;
+  margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .tokenAmount {
+    font-size: 22px !important;
+    margin-left: 8px;
+  }
+
+  .tokenImage {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .tokenAmount {
+    font-size: 20px !important;
+    margin-left: 6px;
+  }
+
+  .tokenImage {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .tokenBalanceItem {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+.transactionCard :global(.ant-table-pagination) {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.transactionCard :global(.ant-pagination-options) {
+  margin-left: 16px;
+}
+
+.transactionCard :global(.ant-pagination-total-text) {
+  margin-right: 16px;
+}
+
+.transactionTable :global(.ant-table-tbody > tr) {
+  transition: background-color 0.2s ease;
+}
+
+.transactionTable :global(.ant-table-tbody > tr:hover > td) {
+  background-color: #f5f5f5 !important;
 }

@@ -24,25 +24,19 @@ const columns: ColumnsType<ERC20Transfer> = [
     title: "Transaction",
     dataIndex: "hash",
     key: "hash",
-    render: (hash: string) => (
-      <Text style={{ textDecoration: "underline", cursor: "pointer" }}>{truncateAddress(hash)}</Text>
-    ),
+    render: (hash: string) => <Text className={styles.clickableText}>{truncateAddress(hash)}</Text>,
   },
   {
     title: "From",
     dataIndex: "from",
     key: "from",
-    render: (from: string) => (
-      <Text style={{ textDecoration: "underline", cursor: "pointer" }}>{truncateAddress(from)}</Text>
-    ),
+    render: (from: string) => <Text className={styles.clickableText}>{truncateAddress(from)}</Text>,
   },
   {
     title: "To",
     dataIndex: "to",
     key: "to",
-    render: (to: string) => (
-      <Text style={{ textDecoration: "underline", cursor: "pointer" }}>{truncateAddress(to)}</Text>
-    ),
+    render: (to: string) => <Text className={styles.clickableText}>{truncateAddress(to)}</Text>,
   },
   {
     title: "Token",
@@ -93,7 +87,7 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         <div className={styles.headerContent}>
           <Image src="https://app.nest.credit/images/nest-logo.svg" alt="Wallet" width={60} height={60} />
           <Input
-            style={{ width: 400 }}
+            className={styles.searchInput}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Paste address"
@@ -105,10 +99,10 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         </div>
       </div>
 
-      <Card style={{ minWidth: "400px" }} loading={balancesLoading}>
+      <Card className={styles.balanceCard} loading={balancesLoading}>
         <h3>Your Nest Balance</h3>
         {balances && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className={styles.balanceContainer}>
             <TokenBalanceItem
               logo="https://icons-ckg.pages.dev/stargate-light/networks/plumephoenix.svg"
               symbol="PLUME"
@@ -130,15 +124,14 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         )}
       </Card>
 
-      <Card loading={txLoading} style={{ margin: "20px 0", minWidth: "800px" }}>
+      <Card loading={txLoading} className={styles.transactionCard}>
         <h3>Transaction history</h3>
         <Table
           columns={columns}
           dataSource={transactions}
           rowKey="hash"
           pagination={false}
-          className={styles.transactionTable}
-          style={{ marginTop: "16px" }}
+          className={`${styles.transactionTable} ${styles.tableContainer}`}
           locale={{
             emptyText: <Text type="secondary">No transactions found</Text>,
           }}
@@ -163,9 +156,9 @@ const TokenBalanceItem = ({
 }) => {
   return (
     <div key={symbol}>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Image style={{ borderRadius: 40 }} src={logo} alt={symbol} width={30} height={30} />
-        <Text strong style={{ fontSize: 25, marginLeft: 10 }}>
+      <div className={styles.tokenBalanceItem}>
+        <Image className={styles.tokenImage} src={logo} alt={symbol} width={30} height={30} />
+        <Text strong className={styles.tokenAmount}>
           {formatAmount(balance, decimals)}
         </Text>
       </div>

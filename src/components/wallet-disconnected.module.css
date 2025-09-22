@@ -1,5 +1,7 @@
 .walletDisconnected {
-  min-width: 600px !important;
+  min-width: 600px;
+  margin: 20px auto;
+  max-width: 600px;
 }
 
 .walletDisconnected :global(.ant-card-body) {
@@ -7,4 +9,30 @@
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
+}
+
+.description {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .walletDisconnected {
+    min-width: 90vw;
+    margin: 16px auto;
+    max-width: 90vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .walletDisconnected {
+    min-width: 95vw;
+    margin: 12px auto;
+    max-width: 95vw;
+  }
+
+  .description {
+    font-size: 14px;
+    text-align: center;
+    padding: 0 16px;
+  }
 }
