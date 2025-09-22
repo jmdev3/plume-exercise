@@ -1,5 +1,5 @@
 .walletDisconnected {
-  min-width: 600px !important;
+  min-width: min(600px, 90vw) !important;
 }
 
 .walletDisconnected :global(.ant-card-body) {

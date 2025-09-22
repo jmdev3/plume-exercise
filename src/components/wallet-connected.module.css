@@ -26,6 +26,8 @@
 }
 
 .transactionTable {
+  max-height: min(400px, 90vh);
+  overflow-y: auto;
 }
 
 .transactionTable :global(.ant-table-thead > tr > th) {

@@ -93,7 +93,7 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         <div className={styles.headerContent}>
           <Image src="https://app.nest.credit/images/nest-logo.svg" alt="Wallet" width={60} height={60} />
           <Input
-            style={{ width: 400 }}
+            style={{ width: "min(400px, 0vw)" }}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Paste address"
@@ -105,7 +105,7 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         </div>
       </div>
 
-      <Card style={{ minWidth: "400px" }} loading={balancesLoading}>
+      <Card style={{ minWidth: "min(400px, 90vw)" }} loading={balancesLoading}>
         <h3>Your Nest Balance</h3>
         {balances && (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -130,7 +130,7 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
         )}
       </Card>
 
-      <Card loading={txLoading} style={{ margin: "20px 0", minWidth: "800px" }}>
+      <Card loading={txLoading} style={{ margin: "20px 0", minWidth: "min(800px, 90vw)" }}>
         <h3>Transaction history</h3>
         <Table
           columns={columns}
