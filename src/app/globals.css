@@ -1,9 +1,9 @@
 /* Force CSS variables to be applied */
 :root {
-  --ant-color-bg-base: #ffffff;
+  --ant-color-bg-base: #f9fafb;
   --ant-color-text: #000000;
   --ant-color-bg-container: #ffffff;
-  --ant-color-border: #d9d9d9;
+  --ant-color-border: #ffffff;
 }
 
 [data-theme="dark"] {
