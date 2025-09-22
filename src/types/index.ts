@@ -1,5 +1,6 @@
 export interface ERC20Transfer {
-  timeStamp: string;
+  id: string;
+  blockNumber: string;
   hash: string;
   from: string;
   to: string;

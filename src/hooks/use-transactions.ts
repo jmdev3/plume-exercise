@@ -1,17 +1,7 @@
 import { client } from "@/lib";
+import { ERC20Transfer } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
-
-type ERC20Transfer = {
-  id: string;
-  timeStamp: string;
-  hash: string;
-  from: string;
-  to: string;
-  value: string;
-  tokenSymbol: string;
-  tokenDecimal: number;
-};
 
 // not the best elegant solution, but it works
 // subgraph or a more elegant indexer service would be better
@@ -20,7 +10,7 @@ async function fetchLogsInChunks({
   token,
   address,
   filter,
-  chunkSize = BigInt(10000000),
+  chunkSize = BigInt(5000000),
 }: {
   token: { symbol: string; decimals: number; address: `0x${string}` };
   address: `0x${string}`;
@@ -53,11 +43,9 @@ async function fetchLogsInChunks({
     for (const event of logs) {
       if (!event.args.from || !event.args.to || event.args.value === undefined) continue;
 
-      const block = await client.getBlock({ blockHash: event.blockHash });
-
       transfers.push({
-        id: `${event.transactionHash}_${uuidv4()}`,
-        timeStamp: block.timestamp.toString(),
+        id: `${event.transactionHash}-${uuidv4()}`,
+        blockNumber: event.blockNumber.toString(),
         hash: event.transactionHash,
         from: event.args.from,
         to: event.args.to,
@@ -94,7 +82,7 @@ export function useTransactions(
         }
       }
 
-      return allTransfers.sort((a, b) => parseInt(b.timeStamp) - parseInt(a.timeStamp));
+      return allTransfers.sort((a, b) => parseInt(b.blockNumber) - parseInt(a.blockNumber));
     },
     enabled: !!address && tokens.length > 0,
     staleTime: 30000,

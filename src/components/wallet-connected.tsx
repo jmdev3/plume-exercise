@@ -1,6 +1,7 @@
 import { useBalances, useTransactions, useWalletConnection } from "@/hooks";
 import {
   calculateUsdValue,
+  client,
   EXAMPLE_TOKEN_ADDRESSES,
   formatAmount,
   formatTimestamp,
@@ -8,8 +9,8 @@ import {
   truncateAddress,
 } from "@/lib";
 import { ERC20Transfer } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { Card, Input, Table, Typography } from "antd";
-import type { ColumnsType } from "antd/es/table";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,7 +20,7 @@ import styles from "./wallet-connected.module.css";
 
 const { Text } = Typography;
 
-const columns: ColumnsType<ERC20Transfer> = [
+const columns = [
   {
     title: "Transaction",
     dataIndex: "hash",
@@ -52,9 +53,9 @@ const columns: ColumnsType<ERC20Transfer> = [
   },
   {
     title: "Date & Time",
-    dataIndex: "timeStamp",
-    key: "timeStamp",
-    render: (timestamp: string) => <Text>{formatTimestamp(timestamp)}</Text>,
+    dataIndex: "blockNumber",
+    key: "blockNumber",
+    render: (blockNumber: bigint) => <BlockNumberColumn blockNumber={blockNumber} />,
   },
 ];
 
@@ -130,7 +131,9 @@ export const WalletConnected = ({ address: addressProp }: { address?: `0x${strin
           columns={columns}
           dataSource={transactions}
           rowKey="id"
-          pagination={false}
+          pagination={{
+            pageSize: 10,
+          }}
           className={`${styles.transactionTable} ${styles.tableContainer}`}
           locale={{
             emptyText: <Text type="secondary">No transactions found</Text>,
@@ -165,4 +168,18 @@ const TokenBalanceItem = ({
       <Text type="secondary">${calculateUsdValue(balance, decimals, price)}</Text>
     </div>
   );
+};
+
+const BlockNumberColumn = ({ blockNumber }: { blockNumber: bigint }) => {
+  const { data: block, isLoading: blockLoading } = useQuery({
+    queryKey: ["block", blockNumber],
+    queryFn: async () => {
+      const block = await client.getBlock({ blockNumber: blockNumber });
+      return block;
+    },
+  });
+
+  if (blockLoading) return <Text>Loading...</Text>;
+
+  return <Text>{formatTimestamp(block?.timestamp.toString() ?? "")}</Text>;
 };
