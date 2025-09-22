@@ -19,7 +19,6 @@
 
 .walletAddress {
   cursor: pointer;
-  border: 1px dotted var(--ant-color-bg-base);
   padding: 8px;
   border-radius: 8px;
   font-weight: 500;

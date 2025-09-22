@@ -8,9 +8,12 @@ import {
   truncateAddress,
 } from "@/lib";
 import { ERC20Transfer } from "@/types";
-import { Card, Table, Typography } from "antd";
+import { Card, Input, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { isAddress } from "viem";
 import { useDisconnect } from "wagmi";
 import styles from "./wallet-connected.module.css";
 
@@ -61,14 +64,27 @@ const columns: ColumnsType<ERC20Transfer> = [
   },
 ];
 
-export const WalletConnected = () => {
+export const WalletConnected = ({ address: addressProp }: { address?: `0x${string}` }) => {
   const { address } = useWalletConnection();
   const { disconnect } = useDisconnect();
-  const { data: balances, isLoading: balancesLoading } = useBalances(address!, EXAMPLE_TOKEN_ADDRESSES);
-  const { data: transactions, isLoading: txLoading } = useTransactions(address!, EXAMPLE_TOKEN_ADDRESSES);
+  const { data: balances, isLoading: balancesLoading } = useBalances(addressProp || address!, EXAMPLE_TOKEN_ADDRESSES);
+  const { data: transactions, isLoading: txLoading } = useTransactions(
+    addressProp || address!,
+    EXAMPLE_TOKEN_ADDRESSES,
+  );
+  const [search, setSearch] = useState("");
+  const router = useRouter();
 
   const handleDisconnect = () => {
     disconnect();
+  };
+
+  const handleSearch = () => {
+    if (isAddress(search)) {
+      router.push(`/address/${search as `0x${string}`}`);
+    } else {
+      alert("Invalid address format");
+    }
   };
 
   return (
@@ -76,6 +92,13 @@ export const WalletConnected = () => {
       <div className={styles.header}>
         <div className={styles.headerContent}>
           <Image src="https://app.nest.credit/images/nest-logo.svg" alt="Wallet" width={60} height={60} />
+          <Input
+            style={{ width: 400 }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Paste address"
+            onPressEnter={handleSearch}
+          />
           <div className={styles.walletAddress}>
             <span onClick={handleDisconnect}>{truncateAddress(address ?? "")}</span>
           </div>
